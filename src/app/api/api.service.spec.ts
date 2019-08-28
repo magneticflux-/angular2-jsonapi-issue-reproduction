@@ -40,6 +40,16 @@ describe('ApiService', () => {
       request.flush(sampleData);
     }));
 
+  it('should parse one thing with the correct name',
+    inject([HttpTestingController, ApiService], (http: HttpTestingController, api: ApiService) => {
+      api.findAll(Thing, {include: 'categories.members'}).subscribe((response) => {
+        expect(response.getModels()[0].name).toBe('Thing One');
+      });
+
+      const request = http.expectOne('./api/v2/thing?include=categories.members');
+      request.flush(sampleData);
+    }));
+
   it('should parse 1 category',
     inject([HttpTestingController, ApiService], (http: HttpTestingController, api: ApiService) => {
       api.findAll(Thing, {include: 'categories.members'}).subscribe((response) => {
